@@ -16,7 +16,8 @@ class WhoopsMiddlewareServiceProvider implements ServiceProvider
         return [
             ErrorMiddleware::class => 'createErrorMiddleware',
             Middleware::class => 'createMiddleware',
-            'middlewaresQueue' => 'updatePriorityQueue'
+            MiddlewareListServiceProvider::MIDDLEWARES_STRATIGILITY_EXCEPTION_QUEUE => 'updateStratigilityPriorityQueue',
+            MiddlewareListServiceProvider::MIDDLEWARES_EXCEPTION_QUEUE => 'updatePriorityQueue'
         ];
     }
 
@@ -34,10 +35,21 @@ class WhoopsMiddlewareServiceProvider implements ServiceProvider
     {
         if ($previous) {
             $priorityQueue = $previous();
-            $priorityQueue->insert($container->get(ErrorMiddleware::class), 3000);
+            $priorityQueue->insert($container->get(Middleware::class), MiddlewareOrder::EXCEPTION_EARLY);
             return $priorityQueue;
         } else {
-            throw new InvalidArgumentException("Could not find declaration for service 'middlewaresQueue'.");
+            throw new InvalidArgumentException("Could not find declaration for service '".MiddlewareListServiceProvider::MIDDLEWARES_EXCEPTION_QUEUE."'.");
+        }
+    }
+
+    public static function updateStratigilityPriorityQueue(ContainerInterface $container, callable $previous = null) : \SplPriorityQueue
+    {
+        if ($previous) {
+            $priorityQueue = $previous();
+            $priorityQueue->insert($container->get(ErrorMiddleware::class), MiddlewareOrder::STRATIGILITY_EXCEPTION_LATE);
+            return $priorityQueue;
+        } else {
+            throw new InvalidArgumentException("Could not find declaration for service '".MiddlewareListServiceProvider::MIDDLEWARES_STRATIGILITY_EXCEPTION_QUEUE."'.");
         }
     }
 }
