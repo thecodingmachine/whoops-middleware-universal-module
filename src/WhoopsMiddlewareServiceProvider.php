@@ -11,13 +11,13 @@ use JsonSchema\Exception\InvalidArgumentException;
 class WhoopsMiddlewareServiceProvider implements ServiceProvider
 {
 
-    public static function getServices()
+    public function getServices()
     {
         return [
-            ErrorMiddleware::class => 'createErrorMiddleware',
-            Middleware::class => 'createMiddleware',
-            MiddlewareListServiceProvider::MIDDLEWARES_STRATIGILITY_EXCEPTION_QUEUE => 'updateStratigilityPriorityQueue',
-            MiddlewareListServiceProvider::MIDDLEWARES_EXCEPTION_QUEUE => 'updatePriorityQueue'
+            ErrorMiddleware::class => [self::class,'createErrorMiddleware'],
+            Middleware::class => [self::class,'createMiddleware'],
+            MiddlewareListServiceProvider::MIDDLEWARES_STRATIGILITY_EXCEPTION_QUEUE => [self::class,'updateStratigilityPriorityQueue'],
+            MiddlewareListServiceProvider::MIDDLEWARES_EXCEPTION_QUEUE => [self::class,'updatePriorityQueue']
         ];
     }
 
