@@ -12,7 +12,7 @@
         "php": ">=7.0",
         "container-interop/service-provider": "~0.2.0",
         "franzl/whoops-middleware": "~0.3.0",
-        "thecodingmachine/middleware-list-universal-module": "~1.0"
+        "thecodingmachine/middleware-list-universal-module": "~0.1.0"
     },
     "require-dev": {
         "puli/composer-plugin": "^1.0"
