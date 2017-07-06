@@ -4,6 +4,7 @@ namespace TheCodingMachine;
 
 use Franzl\Middleware\Whoops\ErrorMiddleware;
 use Franzl\Middleware\Whoops\Middleware;
+use Franzl\Middleware\Whoops\PSR15Middleware;
 use Interop\Container\ContainerInterface;
 use Interop\Container\ServiceProvider;
 use JsonSchema\Exception\InvalidArgumentException;
@@ -16,8 +17,7 @@ class WhoopsMiddlewareServiceProvider implements ServiceProvider
         return [
             ErrorMiddleware::class => [self::class,'createErrorMiddleware'],
             Middleware::class => [self::class,'createMiddleware'],
-            MiddlewareListServiceProvider::MIDDLEWARES_STRATIGILITY_EXCEPTION_QUEUE => [self::class,'updateStratigilityPriorityQueue'],
-            MiddlewareListServiceProvider::MIDDLEWARES_EXCEPTION_QUEUE => [self::class,'updatePriorityQueue']
+            MiddlewareListServiceProvider::MIDDLEWARES_QUEUE => [self::class,'updatePriorityQueue']
         ];
     }
 
@@ -28,7 +28,7 @@ class WhoopsMiddlewareServiceProvider implements ServiceProvider
 
     public static function createMiddleware() : Middleware
     {
-        return new Middleware();
+        return new PSR15Middleware();
     }
 
     public static function updatePriorityQueue(ContainerInterface $container, callable $previous = null) : \SplPriorityQueue
@@ -38,18 +38,7 @@ class WhoopsMiddlewareServiceProvider implements ServiceProvider
             $priorityQueue->insert($container->get(Middleware::class), MiddlewareOrder::EXCEPTION_EARLY);
             return $priorityQueue;
         } else {
-            throw new InvalidArgumentException("Could not find declaration for service '".MiddlewareListServiceProvider::MIDDLEWARES_EXCEPTION_QUEUE."'.");
-        }
-    }
-
-    public static function updateStratigilityPriorityQueue(ContainerInterface $container, callable $previous = null) : \SplPriorityQueue
-    {
-        if ($previous) {
-            $priorityQueue = $previous();
-            $priorityQueue->insert($container->get(ErrorMiddleware::class), MiddlewareOrder::STRATIGILITY_EXCEPTION_LATE);
-            return $priorityQueue;
-        } else {
-            throw new InvalidArgumentException("Could not find declaration for service '".MiddlewareListServiceProvider::MIDDLEWARES_STRATIGILITY_EXCEPTION_QUEUE."'.");
+            throw new InvalidArgumentException("Could not find declaration for service '".MiddlewareListServiceProvider::MIDDLEWARES_QUEUE."'.");
         }
     }
 }
