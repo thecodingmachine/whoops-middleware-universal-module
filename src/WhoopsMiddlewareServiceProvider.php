@@ -5,20 +5,26 @@ namespace TheCodingMachine;
 use Franzl\Middleware\Whoops\ErrorMiddleware;
 use Franzl\Middleware\Whoops\Middleware;
 use Franzl\Middleware\Whoops\PSR15Middleware;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Interop\Container\ServiceProvider;
-use JsonSchema\Exception\InvalidArgumentException;
+use Interop\Container\ServiceProviderInterface;
 
-class WhoopsMiddlewareServiceProvider implements ServiceProvider
+class WhoopsMiddlewareServiceProvider implements ServiceProviderInterface
 {
 
-    public function getServices()
+    public function getFactories()
     {
         return [
             ErrorMiddleware::class => [self::class,'createErrorMiddleware'],
             Middleware::class => [self::class,'createMiddleware'],
-            MiddlewareListServiceProvider::MIDDLEWARES_QUEUE => [self::class,'updatePriorityQueue']
         ];
+    }
+
+    public function getExtensions()
+    {
+        return [
+            MiddlewareListServiceProvider::MIDDLEWARES_QUEUE => [self::class,'updatePriorityQueue']
+        ]
     }
 
     public static function createErrorMiddleware() : ErrorMiddleware
@@ -31,14 +37,9 @@ class WhoopsMiddlewareServiceProvider implements ServiceProvider
         return new PSR15Middleware();
     }
 
-    public static function updatePriorityQueue(ContainerInterface $container, callable $previous = null) : \SplPriorityQueue
+    public static function updatePriorityQueue(ContainerInterface $container, \SplPriorityQueue $queue) : \SplPriorityQueue
     {
-        if ($previous) {
-            $priorityQueue = $previous();
-            $priorityQueue->insert($container->get(Middleware::class), MiddlewareOrder::EXCEPTION_EARLY);
-            return $priorityQueue;
-        } else {
-            throw new InvalidArgumentException("Could not find declaration for service '".MiddlewareListServiceProvider::MIDDLEWARES_QUEUE."'.");
-        }
+        $queue->insert($container->get(Middleware::class), MiddlewareOrder::EXCEPTION_EARLY);
+        return $queue;
     }
 }

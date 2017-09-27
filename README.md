@@ -8,7 +8,7 @@ This package integrates the franzliedke/whoops-middleware in any [container-inte
 composer require thecodingmachine/whoops-middleware-universal-module
 ```
 
-If your container supports autodiscovery by Puli or Discovery, there is nothing more to do.
+If your container supports autodiscovery by Discovery, there is nothing more to do.
 Otherwise, you need to register the [`TheCodingMachine\WhoopsMiddlewareServiceProvider`](src/WhoopsMiddlewareServiceProvider.php) into your container.
 
 Refer to your framework or container's documentation to learn how to register *service providers*.
