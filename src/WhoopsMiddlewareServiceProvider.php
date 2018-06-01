@@ -2,11 +2,11 @@
 
 namespace TheCodingMachine;
 
-use Franzl\Middleware\Whoops\ErrorMiddleware;
-use Franzl\Middleware\Whoops\PSR15Middleware;
+use Middlewares\Whoops;
 use Psr\Container\ContainerInterface;
-use Interop\Container\ServiceProvider;
 use Interop\Container\ServiceProviderInterface;
+use Whoops\Run;
+use Whoops\Util\SystemFacade;
 
 class WhoopsMiddlewareServiceProvider implements ServiceProviderInterface
 {
@@ -14,8 +14,7 @@ class WhoopsMiddlewareServiceProvider implements ServiceProviderInterface
     public function getFactories()
     {
         return [
-            ErrorMiddleware::class => [self::class,'createErrorMiddleware'],
-            PSR15Middleware::class => [self::class,'createMiddleware'],
+            Whoops::class => [self::class,'createMiddleware'], // whoops class instancie un service par l'appel de la function createMiddleware
         ];
     }
 
@@ -26,19 +25,27 @@ class WhoopsMiddlewareServiceProvider implements ServiceProviderInterface
         ];
     }
 
-    public static function createErrorMiddleware() : ErrorMiddleware
+    public static function createMiddleware(ContainerInterface $container) : Whoops
     {
-        return new ErrorMiddleware();
-    }
+        $run = $container->has(Run::class) ? $container->get(Run::class) : null; // si le service Run existe
+        $systemFacade = $container->has(SystemFacade::class) ? $container->get(SystemFacade::class) : null; // si system existe
 
-    public static function createMiddleware() : PSR15Middleware
-    {
-        return new PSR15Middleware();
+        $catchErrors = $container->has('whoops.catchErrors') ?: true; // si whoops.catchError exist
+
+
+        $whoops = new Whoops($run, $systemFacade);
+        $whoops->catchErrors($catchErrors);
+
+        if ($container->has('whoopsHandlerContainer')) {
+            $whoops->handlerContainer($container->get('whoopsHandlerContainer'));
+        }
+
+        return $whoops;
     }
 
     public static function updatePriorityQueue(ContainerInterface $container, \SplPriorityQueue $queue) : \SplPriorityQueue
     {
-        $queue->insert($container->get(PSR15Middleware::class), MiddlewareOrder::EXCEPTION_EARLY);
+        $queue->insert($container->get(Whoops::class), MiddlewareOrder::EXCEPTION_EARLY);
         return $queue;
     }
 }

@@ -13,8 +13,7 @@
     "require": {
         "php": ">=7.0",
         "container-interop/service-provider": "^0.4",
-        "franzl/whoops-middleware": "^0.5.0",
-        "http-interop/http-middleware": "^0.4.1",
+        "middlewares/whoops": "^1.1",
         "thecodingmachine/middleware-list-universal-module": "^1.0"
     },
     "require-dev": {
