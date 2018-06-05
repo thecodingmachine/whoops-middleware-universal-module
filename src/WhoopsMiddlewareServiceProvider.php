@@ -27,10 +27,10 @@ class WhoopsMiddlewareServiceProvider implements ServiceProviderInterface
 
     public static function createMiddleware(ContainerInterface $container) : Whoops
     {
-        $run = $container->has(Run::class) ? $container->get(Run::class) : null; // si le service Run existe
-        $systemFacade = $container->has(SystemFacade::class) ? $container->get(SystemFacade::class) : null; // si system existe
+        $run = $container->has(Run::class) ? $container->get(Run::class) : null;
+        $systemFacade = $container->has(SystemFacade::class) ? $container->get(SystemFacade::class) : null;
 
-        $catchErrors = $container->has('whoops.catchErrors') ?: true; // si whoops.catchError exist
+        $catchErrors = $container->has('whoops.catchErrors') ?: true;
 
 
         $whoops = new Whoops($run, $systemFacade);
