@@ -7,7 +7,7 @@
         beStrictAboutOutputDuringTests="true"
         beStrictAboutTestsThatDoNotTestAnything="true"
         beStrictAboutTodoAnnotatedTests="true"
-        failOnRisky="true"
+        failOnRisky="false"
         failOnWarning="false"
         convertErrorsToExceptions="false"
         convertNoticesToExceptions="false"
@@ -30,7 +30,7 @@
                 showUncoveredFiles="true"
                 showOnlySummary="true"
         />
-        <log type="coverage-html" target="build/coverage" charset="UTF-8" yui="true" highlight="true"/>
+        <log type="coverage-html" target="build/coverage"/>
         <log type="coverage-clover" target="build/logs/clover.xml"/>
     </logging>
 </phpunit>

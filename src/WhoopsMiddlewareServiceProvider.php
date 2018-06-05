@@ -30,7 +30,7 @@ class WhoopsMiddlewareServiceProvider implements ServiceProviderInterface
         $run = $container->has(Run::class) ? $container->get(Run::class) : null;
         $systemFacade = $container->has(SystemFacade::class) ? $container->get(SystemFacade::class) : null;
 
-        $catchErrors = $container->has('whoops.catchErrors') ?: true;
+        $catchErrors = $container->has('whoops.catchErrors') ? $container->get('whoops.catchErrors') : true;
 
 
         $whoops = new Whoops($run, $systemFacade);
