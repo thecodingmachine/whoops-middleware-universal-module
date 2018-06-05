@@ -1,3 +1,9 @@
+[![Latest Stable Version](https://poser.pugx.org/thecodingmachine/whoops-middleware-universal-module/v/stable)](https://packagist.org/packages/thecodingmachine/whoops-middleware-universal-module)
+[![Latest Unstable Version](https://poser.pugx.org/thecodingmachine/whoops-middleware-universal-module/v/unstable)](https://packagist.org/packages/thecodingmachine/whoops-middleware-universal-module)
+[![License](https://poser.pugx.org/thecodingmachine/whoops-middleware-universal-module/license)](https://packagist.org/packages/thecodingmachine/whoops-middleware-universal-module)
+[![Build Status](https://travis-ci.org/thecodingmachine/whoops-middleware-universal-module.svg?branch=1.1)](https://travis-ci.org/thecodingmachine/whoops-middleware-universal-module)
+[![Coverage Status](https://coveralls.io/repos/thecodingmachine/whoops-middleware-universal-module/badge.svg?branch=1.1&service=github)](https://coveralls.io/github/thecodingmachine/whoops-middleware-universal-module?branch=1.1)
+
 # Whoops middleware universal module
 
 This package integrates the `middlewares/whoops` library in any [container-interop](https://github.com/container-interop/service-provider) compatible framework/container.
